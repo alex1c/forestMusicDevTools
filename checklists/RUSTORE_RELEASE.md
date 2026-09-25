@@ -3,6 +3,10 @@
 Use the [canonical screenshot workflow](../playbooks/RUSTORE_SCREENSHOTS.md)
 for capture, crop, ordering, ad audit and count checks.
 
+For games using rewarded hints/assistance, also apply
+[Rewarded Game Release Lessons](../playbooks/REWARDED_GAME_RELEASE.md).
+
+
 ## Release order
 
 1. Core product, safe area and measured layout.
