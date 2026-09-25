@@ -13,6 +13,9 @@ For every screen:
 | Levels/lists | [ ] | [ ] | [ ] | [ ] | [ ] |
 | Game/work area | [ ] explicit decision | [ ] | [ ] | [ ] | [ ] |
 
+Onboarding/training must not request a real ad or show an interstitial. Its
+reserved geometry, if any, is an explicit UX choice.
+
 ## Review questions
 
 - [ ] Is the banner visually attached to the usable bottom?
@@ -24,3 +27,6 @@ For every screen:
 - [ ] Is the `Other our apps` link present where suitable?
 - [ ] If reminders exist, are they useful, configurable, cancellable and
       reconciled after state changes?
+- [ ] If DEV Screenshot QA Mode exists, does it preserve the exact banner
+      reservation and safe-area geometry while suppressing ad requests?
+- [ ] Is screenshot mode guarded in DEV code and unreachable in release?

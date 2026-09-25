@@ -1,6 +1,6 @@
 # FORESTMUSIC DEV PLAYBOOK
 
-## Canonical DevTools v1.0.0 controlled update
+## Canonical DevTools v1.1.0 controlled update
 
 This file preserves the operational source Playbook. The rules in this
 section are the current canonical updates and take precedence where older
@@ -11,7 +11,7 @@ sections conflict with them.
 From a project root, use the reusable script first:
 
 ```powershell
-.\scripts\android-device-qa.ps1
+.\scripts\android\android-device-qa.ps1
 ```
 
 Use `-Build` after native/config/dependency changes and `-Logcat` for a
@@ -29,16 +29,29 @@ The dev client is launched explicitly through `127.0.0.1:8081` after
 URL. On the verified Windows workstation, `--localhost` bound Metro to
 `::1:8081` and failed the phone-side reverse connection.
 
+One active project owns the standard Metro port 8081. Identify its PID,
+query /status, and establish the project root before reusing an existing
+listener. The QA script reuses only a healthy Metro tied to this project; a
+confirmed other-project or unknown owner is a STOP. Never kill an unknown
+Node process. A successful launch and app PID do not prove that the intended
+project bundle is visible; verify app/project identity.
+
+If Metro and the app PID pass but the screen is blank: force-stop the package,
+explicitly relaunch its dev-client deep link to this project's Metro, watch
+for Android Bundled and confirm the project root, then collect bounded
+app-PID logcat if still blank. Do not begin by reinstalling dependencies,
+clearing caches, running clean prebuild, or deleting app data.
+
 ### Current product and layout defaults
 
 - Reserve a `BannerSlot` early on suitable user-facing screens. The default is
-  Home, lists, statistics, settings, reminders, About, training and other
-  informational screens; exceptions must be intentional.
+  Home, lists, statistics, settings, reminders, About and informational
+  screens; training/onboarding is not an ad surface.
 - Place the banner at the bottom of the usable app area:
   `CONTENT -> BANNER -> SAFE AREA/INSET -> SYSTEM AREA`.
 - A banner must not float, overlay content, hide under navigation, or push a
   critical control below the viewport. Gameplay/work areas require an
-  explicit per-app decision; CrossMath uses a sticky bottom banner.
+  explicit per-app decision based on measured interaction constraints.
 - Use real safe-area/window insets and measured layout spacing. Never repair
   bottom layout with device-specific `translateY` or magic offsets.
 - Every suitable app includes an active `Other our apps` link in About (and
@@ -48,6 +61,16 @@ URL. On the verified Windows workstation, `--localhost` bound Metro to
 - During planning, explicitly decide whether the product has a natural
   reminder use case. If yes, prefer useful configurable, cancellable,
   reconciled reminders; do not add spam reminders.
+- Fresh reminders default OFF. Ask for notification permission only after
+  explicit opt-in; never request POST_NOTIFICATIONS at app startup. A denied
+  permission must not leave a false ON state.
+- Give each reminder an explicit typed destination for foreground,
+  background, and cold-start taps; guard duplicate navigation. Keep
+  notification payloads free of personal data and do not put ads or an
+  immediate interstitial in the notification return flow.
+- A dev test notification, when needed, is DEV-only, separately identified,
+  short-delay, routed like the production reminder, and must not mutate user
+  preferences, completion, streak, or statistics.
 - A Reminder/Notifications screen normally receives the same bottom banner
   treatment and safe-area verification.
 
@@ -60,6 +83,11 @@ lint, and plan safe area, onboarding, reminders, banners and About early.
 Generic defect flow remains: `ROOT CAUSE -> MINIMAL FIX -> REGRESSION TEST ->
 UPDATE PLAYBOOK/DEVTOOLS`. Application-specific lessons stay in the project;
 cross-project lessons belong here.
+
+For capture and release detail, use the canonical
+[RuStore screenshot workflow](RUSTORE_SCREENSHOTS.md),
+[Android device QA](ANDROID_DEVICE_QA.md), and
+[release checklist](../checklists/RUSTORE_RELEASE.md).
 
 Версия: 2026-09-10
 
@@ -131,6 +159,9 @@ gesture/navigation bar может перекрывать или прижимат
     (`now - startedAt`).
 -   События через полночь агрегировать по пересечению с локальным
     календарным днём.
+-   React keys для game/session lifecycle должны быть стабильной семантической
+    identity (mode/level, date key, session ID), а не изменяемыми полями
+    persistence вроде updatedAt/autosave counter.
 
 ## 7. Фото / файлы
 
@@ -146,6 +177,9 @@ gesture/navigation bar может перекрывать или прижимат
     paths, URI remap.
 -   Restore: validate → temp → schema check → rollback snapshot →
     restore → migrations → reminder reconciliation → cleanup.
+-   Persistence changes требуют versioned schema и явной backward-compatible
+    migration; corrupt/incomplete data возвращает безопасные defaults, не
+    стирая несвязанный user progress.
 -   Защита от ZIP path traversal.
 -   Platform notification IDs после restore пересоздавать.
 
@@ -174,27 +208,48 @@ Cursor делает Android derivatives и `release-artifacts/icon-512.png`
 
 ## 12. Скриншоты RuStore
 
-Cursor делает после функционала/UX. Строго `1080×1920`, `9:16`. Не
-использовать native emulator ratio. Crop/resize без деформации; размеры
-проверять программно.
+До production ads снять на физическом устройстве clean masters 5–8 сильных
+экранов и сохранить originals без изменений. При уже подключённых ads
+использовать только DEV Screenshot QA Mode с теми же BannerSlot/safe-area
+размерами, без ad requests и автоматических interstitial; production должен
+не допускать этот режим. В Windows PowerShell 5.1 не делать
+`adb exec-out screencap -p > file.png`: захватывать через удалённый PNG на
+устройстве и `adb pull`. Не ретушировать рекламные материалы.
+
+Канонический порядок захвата, crop policy и QA описаны в
+[RuStore Screenshot Workflow](RUSTORE_SCREENSHOTS.md). Store portrait:
+1080×1920, 9:16. Для master 1080×2400 удалить ровно 480 строк
+асимметричным crop без stretch. Если важный UI не помещается — recapture.
+Исходники остаются нетронутыми; contact sheet — только QA, не для загрузки.
 
 ## 13. Release order
 
-Функционал → UX → название → master icon → icon integration →
-ads/analytics → native checkpoint → privacy → screenshots → release
-artifacts → production signing → final AAB → RuStore.
+Функционал → UX/safe area/banner geometry → reminders/onboarding →
+physical functional QA → clean screenshot masters → ads/analytics →
+release permissions/config → финальные RuStore images → source freeze →
+final AAB from clean HEAD==origin/main → AAB manifest/signing/checksum audit
+→ PEPK if RuStore requests → upload.
+
+Любой source commit после AAB build, даже DEV-only tooling, требует
+повторной сборки из нового final SHA. До release build очистить DEV/QA env
+flags и проверить, что они отсутствуют. Final AAB подтверждать через
+bundletool/equivalent: package, versions, min/target SDK, permissions,
+signer fingerprints, SHA256/size и sidecar.
 
 ## 14. Production signing
 
 Production keystore создаёт только пользователь. Хранить
 `D:\secure\android-signing\<repo>\`.
 
-Рекомендуемо: - `<repo>-release.jks` - `keystore-password.txt` -
-`key-password.txt`
+Рекомендуемая структура вне Git: release JKS и signing.properties с
+ограниченным доступом.
 
 Пароли читать через `.Trim()`, не логировать/коммитить. После
 `bundleRelease` проверить alias, SHA1/SHA256 сертификата и SHA256 AAB.
 Несовпадение fingerprint → STOP.
+Пароли не хранить в отдельных текстовых файлах, не выводить properties и не
+вставлять значения паролей в аргументы команд, логи, чат или отчёты.
+Production signing не должен fallback-иться на debug key.
 
 ## 15. PEPK
 
@@ -202,6 +257,13 @@ Production keystore создаёт только пользователь. Хра
 keystore, alias и encryption key только со страницы RuStore, с
 `--include-cert`. `.jks` в RuStore не загружать. Upload certificate
 экспортировать `keytool -exportcert -rfc` в PEM.
+PEPK ZIP и публичный upload certificate PEM — отдельные артефакты. Для
+PEPK вводить пароли интерактивно; не передавать их флагами командной
+строки и не сохранять encryption key RuStore в шаблонах.
+Безопасная форма команды (подставить текущий key только из RuStore для
+этого приложения):
+
+    java -jar pepk.jar --keystore "<release.jks>" --alias "<alias>" --output="<pepk_out.zip>" --encryptionkey=<RUSTORE_PROVIDED_KEY> --include-cert
 
 ## 16. RuStore permissions --- сначала проверка
 
@@ -222,14 +284,18 @@ app-private storage.
 
 ## 17. RuStore и ложный AdMob
 
-Автоопределение AdMob может быть вызвано helper dependencies. Проверять
-release dependency tree.
+Автоопределение сети объявлений в RuStore может быть вызвано транзитивным
+адаптером или analytics SDK. Проверять release dependency tree, manifest,
+native dependencies, application IDs/config и FINAL AAB; карточка RuStore
+сама по себе не доказывает наличие serving SDK.
 
 Полный AdMob SDK: `play-services-ads`, `play-services-ads-lite`,
 `play-services-ads-base`, mediation adapters.
 
-Только `ads-identifier`, `appset`, `AD_ID` не означают AdMob. В карточке
-оставлять реально используемую интеграцию.
+ads-identifier, appset, AD_ID и revenue adapter без serving SDK не означают,
+что приложение показывает рекламу этой сети. Отличать adapter, identifier,
+metadata и полный ads SDK по resolved dependency set и AAB. Перед удалением
+зависимости определить её фактическую роль.
 
 ## 18. RuStore: данные
 
@@ -237,9 +303,10 @@ release dependency tree.
 используются только фото --- не оставлять «Видео» из-за возможностей
 picker.
 
-Обоснование permissions описывает реальный сценарий, например: CAMERA
---- фото по инициативе пользователя; POST_NOTIFICATIONS --- локальные
-напоминания, создаваемые пользователем.
+Обоснование permissions описывает только фактическое использование:
+POST_NOTIFICATIONS — опциональные локальные reminders после opt-in;
+RECEIVE_BOOT_COMPLETED — восстановление reminder после reboot; AD_ID —
+только если реально используется ads/attribution SDK.
 
 ## 19. Privacy
 
@@ -249,13 +316,20 @@ Privacy соответствует реальному приложению. GitH
 
 ## 20. Final QA
 
-Перед release проверить: - tests/typecheck/lint; - native
-build/install/launch; - один Metro + лёгкий AVD; - SQLite regressions; -
-active timers; - forms/keyboard; - dark-mode smoke; - Android Back; -
-release permissions/dependencies; - Ads/AppMetrica init; -
-notifications/image/document picker; - launcher icon; - privacy HTTP
-200; - icon 512×512; - screenshots 1080×1920; - нижние CTA на физическом
-Android с navigation/gesture bar.
+Перед release проверить tests/typecheck/lint, native build/install/launch,
+один Metro с подтверждённой project identity, SQLite regressions, active
+timers, forms/keyboard, dark-mode smoke, Android Back, release
+permissions/dependencies, Ads/AppMetrica init, notifications/image/document
+picker, launcher icon, privacy HTTP 200, icon 512×512 и screenshots 1080×1920
+без ads/debug UI. Нижние CTA проверять на физическом Android с
+navigation/gesture bar.
+
+После изменения autosave, restore или session identity физически проверить
+ввод: выбрать cell/control → ввести значение → увидеть изменившееся состояние
+→ проверить сохранение. Для таймера, исключающего background time: примерно
+10 секунд active + 20 секунд background + 5 секунд active должны прибавить
+около 15, а не 35 секунд. Отчёт явно разделяет automated, physical и
+not-verified результаты.
 
 ## 21. После загрузки в RuStore
 
@@ -1340,7 +1414,7 @@ PASS только если:
 
 Для ForestMusic RN/Expo проектов создать единый:
 
-scripts/android-device-qa.ps1
+scripts/android/android-device-qa.ps1
 
 Он должен безопасно автоматизировать:
 
