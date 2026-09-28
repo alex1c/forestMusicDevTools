@@ -1,10 +1,24 @@
 # FORESTMUSIC DEV PLAYBOOK
 
-## Canonical DevTools v1.1.0 controlled update
+## Canonical DevTools v1.1.1 controlled update
 
 This file preserves the operational source Playbook. The rules in this
 section are the current canonical updates and take precedence where older
 sections conflict with them.
+
+### Windows PowerShell 5.1 encoding safety
+
+Canonical Android helpers must run under **Windows PowerShell 5.1** without
+requiring PowerShell 7. Executable `.ps1` sources should stay ASCII-safe:
+avoid typographic dashes, arrows, and smart quotes in script text. PS 5.1
+often loads UTF-8-without-BOM files through a legacy code page; one em dash
+can become mojibake and fail with `ParserError` before QA starts.
+
+After editing helpers, run:
+
+```powershell
+powershell -NoProfile -File .\scripts\android\validate-ps51-encoding.ps1
+```
 
 ### Standard physical-device startup
 

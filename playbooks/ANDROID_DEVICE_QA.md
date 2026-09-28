@@ -19,6 +19,12 @@ Use the following only when appropriate:
 reuse the installed development build. `-Logcat` prints a bounded logcat
 snapshot filtered to the discovered application PID.
 
+Windows PowerShell **5.1** is the supported shell for these helpers. PowerShell
+7 is not required. Keep executable `.ps1` sources ASCII-safe (no typographic
+dashes/arrows/smart quotes) so UTF-8-without-BOM files parse correctly on
+Russian Windows code pages. Validate with
+`scripts/android/validate-ps51-encoding.ps1` after helper edits.
+
 ## Verified Metro behavior
 
 The standard local Windows command is:

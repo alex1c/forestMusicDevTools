@@ -7,7 +7,9 @@
 - [ ] Package/application ID chosen and recorded.
 - [ ] Expo/RN URL scheme chosen and verified.
 - [ ] Cursor path and Codex/QA path recorded.
-- [ ] DevTools version recorded, for example `ForestMusic DevTools: v1.1.0`.
+- [ ] DevTools version recorded, for example `ForestMusic DevTools: v1.1.1`.
+- [ ] Canonical `android-device-qa.ps1` / `android-screenshot.ps1` copied from
+      the recorded DevTools SHA (Windows PowerShell 5.1 encoding-safe).
 
 ## Foundation
 

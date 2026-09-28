@@ -26,7 +26,26 @@ For a project such as `myNewAppRuStore`:
    device validation.
 
 Projects should record the exact version used, for example:
-ForestMusic DevTools: v1.1.0.
+ForestMusic DevTools: v1.1.1.
+
+## Windows PowerShell 5.1 compatibility
+
+Canonical Android helpers are written for **Windows PowerShell 5.1** (Desktop),
+the standard ForestMusic QA workstation shell. PowerShell 7 (`pwsh`) is **not**
+required and must not be assumed.
+
+Executable `.ps1` helpers under `scripts/` must stay **encoding-safe for PS 5.1**:
+prefer ASCII-safe punctuation in script source (plain `-` instead of em/en dashes,
+`->` instead of Unicode arrows, ASCII quotes). On many Windows installs,
+PowerShell 5.1 loads UTF-8-without-BOM `.ps1` files using a legacy code page; a
+single typographic character can turn into mojibake and cascade into
+`ParserError` failures before any QA logic runs.
+
+Validate helpers after edits:
+
+```powershell
+powershell -NoProfile -File .\scripts\android\validate-ps51-encoding.ps1
+```
 
 ## Normal Android startup
 
@@ -63,7 +82,16 @@ operator chooses and opens the app state.
 - [RuStore release checklist](checklists/RUSTORE_RELEASE.md): release gate.
 - [Android screenshot helper](scripts/android/android-screenshot.ps1):
   capture the currently visible device screen.
+- [PS 5.1 encoding validator](scripts/android/validate-ps51-encoding.ps1):
+  ASCII-safe / parser check for executable helpers.
 - [React Native/Expo template notes](templates/react-native-expo/README.md).
+
+## Version 1.1.1
+
+See [VERSION](VERSION). Patch release: Windows PowerShell 5.1 encoding-safe
+canonical `.ps1` helpers (remove typographic punctuation that broke PS 5.1
+UTF-8-without-BOM parsing), plus an encoding/parser validation script and
+explicit PS 5.1 support documentation.
 
 ## Version 1.1.0
 
