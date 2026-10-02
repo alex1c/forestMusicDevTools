@@ -1,10 +1,26 @@
 # FORESTMUSIC DEV PLAYBOOK
 
-## Canonical DevTools v1.1.1 controlled update
+## Canonical DevTools v1.2.0 controlled update
 
 This file preserves the operational source Playbook. The rules in this
 section are the current canonical updates and take precedence where older
 sections conflict with them.
+
+### Independent review is a distinct release gate
+
+For substantial applications/games, green tests and physical smoke do not
+replace an independent Codex review when persistence, ads, analytics,
+navigation/lifecycle, or release configuration are present.
+
+Follow [Independent Review Checkpoint](../checklists/INDEPENDENT_REVIEW.md).
+
+Status language:
+
+- `INDEPENDENT REVIEW PENDING`
+- `INDEPENDENT REVIEW FINDINGS`
+- `INDEPENDENT REVIEW PASS`
+
+Unresolved Critical/High findings block `READY FOR RUSTORE UPLOAD`.
 
 ### Windows PowerShell 5.1 encoding safety
 

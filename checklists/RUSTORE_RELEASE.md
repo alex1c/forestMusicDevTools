@@ -11,19 +11,26 @@ For games using rewarded hints/assistance, also apply
 
 1. Core product, safe area and measured layout.
 2. Reserve banner geometry; decide reminder and onboarding behavior.
-3. Complete functional physical-device QA.
-4. Capture clean source screenshot masters before production ads are enabled.
-5. Integrate monetization/analytics and validate production configuration.
-6. Audit release permissions and native dependencies.
-7. Recapture affected images in DEV Screenshot QA Mode if needed; prepare and
+3. Complete functional implementation gates (tests / typecheck / lint / audits).
+4. Complete the [Independent Review Checkpoint](INDEPENDENT_REVIEW.md):
+   independent Codex review → remediation → independent re-review until
+   Critical/High are closed.
+5. Complete functional physical-device QA on the re-reviewed SHA.
+6. Capture clean source screenshot masters before production ads are enabled.
+7. Integrate monetization/analytics and validate production configuration.
+8. Audit release permissions and native dependencies.
+9. Recapture affected images in DEV Screenshot QA Mode if needed; prepare and
    review final 9:16 screenshots.
-8. Freeze source at clean HEAD equal to origin/main; record the SHA.
-9. Clear DEV/QA environment flags, rerun checks, then build the final AAB.
-10. Audit the final AAB manifest, identity, signer and checksum.
-11. Complete RuStore metadata/data/signing steps, then upload.
+10. Freeze source at clean HEAD equal to origin/main; record the SHA.
+11. Clear DEV/QA environment flags, rerun checks, then build the final AAB.
+12. Audit the final AAB manifest, identity, signer and checksum.
+13. Complete RuStore metadata/data/signing steps, then upload.
 
 Any source commit after the AAB build, including a DEV-only tooling change,
 requires another AAB build from the new final source SHA.
+
+Projects with unresolved Critical/High independent findings are not
+`READY FOR RUSTORE UPLOAD` even when automated gates are green.
 
 ## Quality and product checks
 

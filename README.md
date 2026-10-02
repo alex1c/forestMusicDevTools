@@ -26,7 +26,7 @@ For a project such as `myNewAppRuStore`:
    device validation.
 
 Projects should record the exact version used, for example:
-ForestMusic DevTools: v1.1.1.
+ForestMusic DevTools: v1.2.0.
 
 ## Windows PowerShell 5.1 compatibility
 
@@ -85,6 +85,13 @@ operator chooses and opens the app state.
 - [PS 5.1 encoding validator](scripts/android/validate-ps51-encoding.ps1):
   ASCII-safe / parser check for executable helpers.
 - [React Native/Expo template notes](templates/react-native-expo/README.md).
+
+## Version 1.2.0
+
+See [VERSION](VERSION). Minor release: mandatory independent Codex review
+checkpoint before RuStore release preparation for substantial apps/games
+(persistence, ads, analytics, lifecycle). See
+[Independent Review Checkpoint](checklists/INDEPENDENT_REVIEW.md).
 
 ## Version 1.1.1
 
