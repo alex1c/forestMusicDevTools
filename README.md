@@ -67,6 +67,15 @@ production ads, capture device screens without binary redirection, and prepare
 reviewed 9:16 assets. The helper only captures the current screen; the
 operator chooses and opens the app state.
 
+## Google Play publication (mandatory policy gate)
+
+Before preparing **any** Google Play release (including Hexonica), run the
+[Google Play release checklist](checklists/GOOGLE_PLAY_RELEASE.md) and read the
+[Google Play publication playbook](playbooks/GOOGLE_PLAY_PUBLICATION.md).
+The first BP Diary closed-test AAB passed technical checks but was **rejected**
+because its medical declarations required an organization developer account.
+Account/category eligibility must therefore be validated **before building**.
+
 ## Repository map
 
 - [Playbook](playbooks/FORESTMUSIC_DEV_PLAYBOOK.md): full operational rules.
@@ -80,6 +89,8 @@ operator chooses and opens the app state.
 - [UX/ads checklist](checklists/UX_ADS_CHECKLIST.md): screen-by-screen review.
 - [Android QA checklist](checklists/ANDROID_QA.md): repeatable device QA.
 - [RuStore release checklist](checklists/RUSTORE_RELEASE.md): release gate.
+- [Google Play publication](playbooks/GOOGLE_PLAY_PUBLICATION.md): policy eligibility, App Signing, Data Safety, closed testing, lessons from rejection.
+- [Google Play release checklist](checklists/GOOGLE_PLAY_RELEASE.md): mandatory preflight and submission gates.
 - [Android screenshot helper](scripts/android/android-screenshot.ps1):
   capture the currently visible device screen.
 - [PS 5.1 encoding validator](scripts/android/validate-ps51-encoding.ps1):
