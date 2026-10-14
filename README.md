@@ -90,6 +90,7 @@ Account/category eligibility must therefore be validated **before building**.
 - [Android QA checklist](checklists/ANDROID_QA.md): repeatable device QA.
 - [RuStore release checklist](checklists/RUSTORE_RELEASE.md): release gate.
 - [Google Play publication](playbooks/GOOGLE_PLAY_PUBLICATION.md): policy eligibility, App Signing, Data Safety, closed testing, lessons from rejection.
+- [Privacy Policy Center](playbooks/PRIVACY_POLICY_CENTER.md): one ForestMusicLanding deployment for all app privacy policies, EN/RU URLs, app update steps and safe Timeweb release.
 - [Google Play release checklist](checklists/GOOGLE_PLAY_RELEASE.md): mandatory preflight and submission gates.
 - [Android screenshot helper](scripts/android/android-screenshot.ps1):
   capture the currently visible device screen.
