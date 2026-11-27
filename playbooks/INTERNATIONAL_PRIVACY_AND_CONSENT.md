@@ -17,8 +17,8 @@ Reusable **implementation checklist**, not a ready-made legal guarantee. Applies
 5. If Google AdMob/Google demand/mediation is enabled, reassess applicable Google-certified CMP / TCF requirements; do not assume Yandex-only consent handling covers Google inventory. Check location and cross-border data transfer requirements with competent advice where material.
 
 ## Recommended consent architecture
-- Separate optional advertising and analytics purposes; no pre-ticked boxes; allow refusal and revisit/withdrawal without blocking essential offline shift calendar functions.
-- Default to optional SDKs disabled until valid choice has been determined. Disable native auto-initialization and test pre-consent network behavior, not only JS flags.
+- Separate advertising availability, personalization, SDK processing and application analytics purposes; no pre-ticked boxes; allow refusal and revisit/withdrawal without blocking essential offline shift calendar functions.
+- Default to optional SDKs disabled until a verified lawful and vendor-supported mode has been determined. Disable native auto-initialization and test pre-consent network behavior, not only JS flags.
 - Define persisted vs session-only consent intentionally: a persisted, valid, revocable choice can be restored when permitted, after checking its version/scope. Do not force a dialog on every launch without a reason.
 - Pass Yandex user-consent signals according to **current React Native SDK documentation** when decision is known and on later starts; withdrawal blocks new loads/events and invalidates in-flight UI operations, while vendor server retention must be described honestly.
 - Plan a real CMP integration if the chosen countries/vendors demand it. No dark patterns; consent status should never be misrepresented.
@@ -37,3 +37,7 @@ Reusable **implementation checklist**, not a ready-made legal guarantee. Applies
 - [ ] Actual privacy URLs 200, accurate EN and supported translations.
 - [ ] Play Data Safety, ad declaration, content rating and store flavor agree with AAB.
 - [ ] No copied competitor legal text, no invented vendor practices, no false legal guarantees.
+
+## Owner policy — 2026-11-27
+Free apps are advertising-supported. Enable ads by default only where verified lawful and vendor-supported; no unnecessary universal ad-off switch. Non-personalized ads are not inherently consent-free. Required refusal and withdrawal must remain accessible. Unknown jurisdiction fails closed; no GPS, and language/SIM/timezone/store alone are insufficient. No external GeoIP or paid CMP without owner approval. First-party consent is not certified.
+Persist grants before SDK activation; revoke immediately, fail closed on write errors, reject missing or mismatched versions, guard stale callbacks, explicitly deny pending consent where supported. Audit embedded ads telemetry separately. Inventory local storage, notifications, backup and device transfer; disclose export and vendor deletion limits. Device/network evidence is mandatory before release; logcat alone is not network proof.
