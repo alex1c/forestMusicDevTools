@@ -26,3 +26,10 @@ Increase sustainable ad revenue without disruptive placements, invalid traffic, 
 
 ## Release guardrail
 No new interstitial behavior ships until end-to-end UX tests and independent Codex audit pass. Every placement is reviewed separately per store and user region. Fix layout rather than hide broken controls.
+
+## Owner decisions and physical-device reference (2026-11-27)
+- Free apps are ad-supported by default in verified lawful/vendor-supported modes; no unnecessary global ad-off switch. See INTERNATIONAL_PRIVACY_AND_CONSENT.md for mandatory regional exceptions.
+- Prefer standalone internal QA APK with embedded JS, separate QA application ID, demo ads and safe test analytics on OPPO CPH2687RU / Android 16. Avoid emulator/Metro troubleshooting unless needed for coverage. QA overrides must be impossible in production. Retain emulator for additional screen sizes and Android versions.
+- Shift Calendar reference: branch feature/google-play-adaptation, commit 938f465 (reported Phase 3.3 PASS). Physical-device notice, demo banners, share interstitial, wipe and restricted-mode refusal verified per project report; 301 tests pass. Network packet capture NOT PASS; demo fill and logcat do not prove production inventory or privacy compliance. Launch threshold runtime coverage must be evidenced separately. Google Play ads remain disabled. Do not generalize the RuStore jurisdiction heuristic to international releases.
+- Release checklist: verify developer-domain app-ads.txt HTTPS 200, plain text, complete vendor records, dashboard acceptance; preserve existing records when merging. Canonical ForestMusic URL https://forest-music.ru/app-ads.txt. Verify actual SDK version, Maven repository and resolved mediation graph; SDK upgrade needs native rebuild and runtime regression. Shift Calendar uses Yandex 8.7.0 and filtered https://ads.maven.yandex.net/ per project report.
+- Defer optional VPN regional experiments until needed; known mandatory compliance and unresolved network checks remain release gates. Prefer documented vendor-supported mechanisms over custom GeoIP/CMP infrastructure.
