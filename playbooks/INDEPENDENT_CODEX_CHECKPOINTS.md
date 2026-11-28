@@ -14,3 +14,14 @@ For small updates use a risk-based checkpoint. Add extra checkpoints for high-ri
 ## Shift Calendar reference
 
 Checkpoint A after Phase 4, target 0deb408, previous independent baseline 3ed9080. Checkpoint B after Phase 5 feature expansion, C after release preparation, D after AAB. Keep Google Play production ads disabled until applicable release gates are satisfied.
+
+## Regression evidence and acceptance (2026-11-28)
+
+- Reproduce the original defect through production components and callbacks, mocking only external boundaries. Run the same regression before and after the fix; record actual exit codes. Contaminated mocks/timeouts are not proof of the intended failure. Independent reproductions may establish closure separately.
+- PASS requires normal process exit 0, not just passing assertion counts. Await asynchronous act scopes, unmount renderers, and drain effects; do not hide warnings or force exit.
+- Use one authoritative embedded build identity; conflicting QA flags must fail closed. Validate real resolver behavior, not source strings. Record APK source SHA, full artifact hash and device serial separately.
+- UI language, default currency preference and persisted monetary denomination/scale are distinct. Existing salary values use persisted denomination in display, input and backups; never silently reinterpret values. PDF statistics use semantic row IDs and structured quantities/units.
+- Recheck live lifecycle and consent immediately before interstitial show after asynchronous loading; stale state must not override newer protection flags.
+- Full local reset coordinates all providers, pending writes, stale reads and native scheduling through one shared boundary. Block new conflicting mutations, drain writes and running reschedules before final storage scrub and notification cancellation, invalidate stale restoration, reset provider state, report cleanup failures truthfully, and release the gate safely. Internal reset operations must not deadlock on the gate. Verify normal operation after reset and ready/pending-consent state without restoring old grants.
+
+Checkpoint A final source target c45545d8b9a68a1512405aee087adbf99046ba72: APPROVE WITH CONDITIONS; all original P1 findings closed by independent review. Remaining P2: consent readiness after stale restore and asynchronous act warnings. Phase 5 allowed; physical QA, packet capture (NOT PASS), embedded telemetry, international advertising, legal publication, signing and native artifact checks remain release gates. This is source approval only.
